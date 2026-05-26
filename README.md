@@ -2,6 +2,20 @@
 
 Use const expressions as Serde defaults.
 
+## Install
+```shell
+cargo add serde-const-default
+```
+
+Or, add it to `Cargo.toml`:
+
+```toml
+[dependencies]
+serde-const-default = "0.1"
+```
+
+## Usage & Examples
+
 ```rust
 use serde::Deserialize;
 
