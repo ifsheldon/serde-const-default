@@ -18,11 +18,12 @@ serde-const-default = "0.1"
 
 ```rust
 use serde::Deserialize;
+use serde_const_default::serde_const_default;
 
 const SOME_VALUE: u8 = 7;
 const DEFAULT_NAME: &str = "anonymous";
 
-#[serde_const_default::serde_const_default]
+#[serde_const_default]
 #[derive(Deserialize)]
 struct Config {
     #[const_default = SOME_VALUE]
@@ -59,10 +60,11 @@ Lazy defaults should be accessed explicitly:
 ```rust
 use serde::Deserialize;
 use std::sync::LazyLock;
+use serde_const_default::serde_const_default;
 
 static DEFAULT_NAME: LazyLock<String> = LazyLock::new(|| "lazy".to_string());
 
-#[serde_const_default::serde_const_default]
+#[serde_const_default]
 #[derive(Deserialize)]
 struct Config {
     #[const_default = DEFAULT_NAME.clone()]

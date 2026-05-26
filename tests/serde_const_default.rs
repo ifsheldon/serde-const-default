@@ -1,25 +1,26 @@
 use serde::Deserialize;
 use std::sync::LazyLock;
+use serde_const_default::serde_const_default;
 
 const SOME_VALUE: u8 = 7;
 const DEFAULT_NAME: &str = "anonymous";
 static LAZY_NAME: LazyLock<String> = LazyLock::new(|| "lazy".to_string());
 
-#[serde_const_default::serde_const_default]
+#[serde_const_default]
 #[derive(Debug, Deserialize, PartialEq)]
 struct PlainDefault {
     #[const_default = SOME_VALUE]
     count: u8,
 }
 
-#[serde_const_default::serde_const_default]
+#[serde_const_default]
 #[derive(Debug, Deserialize, PartialEq)]
 struct ConvertedDefault {
     #[const_default_from(DEFAULT_NAME)]
     name: String,
 }
 
-#[serde_const_default::serde_const_default]
+#[serde_const_default]
 #[derive(Debug, Deserialize, PartialEq)]
 struct LazyDefault {
     #[const_default = LAZY_NAME.clone()]
