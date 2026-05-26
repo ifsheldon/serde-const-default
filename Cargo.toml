@@ -2,6 +2,10 @@
 name = "serde-const-default"
 version = "0.1.0"
 edition = "2024"
+authors = ["Feng <feng.liang@alumni.kaust.edu.sa>"]
+description = "A procedural macro to provide const default values for serde deserialization."
+license = "MIT"
+repository = "https://github.com/ifsheldon/serde-const-default"
 
 [lib]
 proc-macro = true
