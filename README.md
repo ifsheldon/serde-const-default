@@ -34,14 +34,16 @@ struct Config {
 }
 ```
 
-`#[const_default = EXPR]` generates a Serde default function that returns
+`#[const_default = EXPR]` generates a Serde default `const fn` that returns
 `EXPR` directly:
 
 ```rust
-fn generated_default() -> FieldType {
+const fn generated_default() -> FieldType {
     EXPR
 }
 ```
+
+Use this form when `EXPR` is valid inside a `const fn`.
 
 `#[const_default_from(EXPR)]` generates a Serde default function that converts
 the expression into the field type with `From::from`:
@@ -67,7 +69,7 @@ static DEFAULT_NAME: LazyLock<String> = LazyLock::new(|| "lazy".to_string());
 #[serde_const_default]
 #[derive(Deserialize)]
 struct Config {
-    #[const_default = DEFAULT_NAME.clone()]
+    #[const_default_from(DEFAULT_NAME.clone())]
     name: String,
 }
 ```

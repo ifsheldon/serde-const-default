@@ -42,7 +42,7 @@ use syn::{
 ///
 /// The macro consumes field attributes using the following forms:
 ///
-/// - `#[const_default = EXPR]`, which generates a default function that returns
+/// - `#[const_default = EXPR]`, which generates a `const fn` that returns
 ///   `EXPR` directly.
 /// - `#[const_default_from(EXPR)]`, which generates a default function that
 ///   returns `::core::convert::From::from(EXPR)`.
@@ -171,9 +171,9 @@ fn rewrite_field(
     let helper_name = LitStr::new(&helper_ident.to_string(), helper_ident.span());
     let ty = &field.ty;
     let expr = default.expr;
-    let body = match default.kind {
-        DefaultKind::Plain => quote! { #expr },
-        DefaultKind::From => quote! { ::core::convert::From::from(#expr) },
+    let (function_qualifier, body) = match default.kind {
+        DefaultKind::Plain => (quote! { const }, quote! { #expr }),
+        DefaultKind::From => (quote! {}, quote! { ::core::convert::From::from(#expr) }),
     };
 
     // Serde's derive macro reads default helpers through a string literal path,
@@ -185,7 +185,7 @@ fn rewrite_field(
 
     Ok(Some(quote! {
         #[allow(non_snake_case)]
-        fn #helper_ident() -> #ty {
+        #function_qualifier fn #helper_ident() -> #ty {
             #body
         }
     }))
@@ -289,7 +289,8 @@ struct ConstDefault {
     expr: Expr,
 }
 
-/// Selects how the generated default body produces the field value.
+/// Selects whether the generated helper is a direct const default or a runtime
+/// conversion default.
 enum DefaultKind {
     Plain,
     From,
